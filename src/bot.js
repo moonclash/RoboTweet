@@ -34,4 +34,9 @@ function stream(tag) {
 
 stream('#frontend');
 
+//TODO - add location based response / retweets
+//TODO - add user specific retweets / responses
+//TODO - add image upload support
+
+
 
