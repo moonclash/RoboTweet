@@ -21,10 +21,19 @@ function userRetweet(tweetId) {
   });
 }
 
+function userAnswerMentionReply(userName) {
+  client.post('statuses/update',{status: `ok this has been fun, you need to get some sleep master @${userName}`}, function(error,tweetReply,response) {
+    if(error) {
+      console.log(error);
+    }
+  });
+}
+
 function stream(tag) {
+  
   client.stream('statuses/filter',{track: tag},function(stream) {
     stream.on('data',function(tweet) {
-      userRetweet(tweet.id_str);
+      userAnswerMentionReply(tweet.user.screen_name);
     });
     stream.on('error',function(error) {
       console.log(error);
@@ -32,8 +41,9 @@ function stream(tag) {
   })
 }
 
-stream('#frontend');
+stream('@emsignlimitless');
 
+//TODO - add response based on mentioning botname
 //TODO - add location based response / retweets
 //TODO - add user specific retweets / responses
 //TODO - add image upload support
