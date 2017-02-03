@@ -1,52 +1,68 @@
 const userKeys = require('./userKeys.js');
 const Twitter = require('twitter');
 
-const client = new Twitter(userKeys.userInfo) ;
+const client = new Twitter(userKeys.userInfo);
 
 function userTweet(stat) {
-  client.post('statuses/update',{status: stat}, function(error, tweet, response) {
-  if(error) {
-    console.log(error);
-  }
-  console.log(tweet);  
-  console.log(response);  
-});
+  client.post('statuses/update', { status: stat }, function(error, tweet, response) {
+    if (error) {
+      console.log(error);
+    }
+  });
 }
 
 function userRetweet(tweetId) {
-  client.post('statuses/retweet/' + tweetId, function(error,tweet,response) {
-    if(error) {
+  client.post('statuses/retweet/' + tweetId, function(error, tweet, response) {
+    if (error) {
       console.log(error);
     }
   });
 }
 
 function userAnswerMentionReply(userName) {
-  client.post('statuses/update',{status: `ok this has been fun, you need to get some sleep master @${userName}`}, function(error,tweetReply,response) {
-    if(error) {
+  client.post('statuses/update', { status: `@${userName}` }, function(error, tweetReply, response) {
+    if (error) {
       console.log(error);
     }
   });
 }
 
-function stream(tag) {
-  
-  client.stream('statuses/filter',{track: tag},function(stream) {
-    stream.on('data',function(tweet) {
-      userAnswerMentionReply(tweet.user.screen_name);
+function tweetBasedOnLocation(botLocation, userLocation, username, text) {
+  const regex = new RegExp(botLocation, 'gi');
+  if (userLocation.match(botLocation)) {
+    client.post('favourites/create', { status: text }, function(error, tweet, response) {
+
+      if (error) {
+        console.log(error);
+      }
     });
-    stream.on('error',function(error) {
-      console.log(error);
-    })
+  } else {
+    return;
+  }
+
+}
+
+function followUser(userID) {
+  client.post('friendships/create', function(screen_name,id,follow) {
+
   })
 }
 
-stream('@emsignlimitless');
+function stream(tag) {
+  client.stream('statuses/filter', { track: tag }, function(stream) {
+    stream.on('data', function(tweet) {      
+      followUser()
+    });
+    stream.on('error', function(error) {
+      console.log(error);
+    });
+  });
+}
 
-//TODO - add response based on mentioning botname
-//TODO - add location based response / retweets
-//TODO - add user specific retweets / responses
-//TODO - add image upload support
+stream('#reactjs,vuejs');
 
-
-
+//TODO - add response based on mentioning botname [x]
+//TODO - add follow function [-]
+//TODO - add location based response / retweets [-]
+//TODO - add user specific retweets / responses []
+//TODO - add image upload support []
