@@ -43,15 +43,16 @@ function tweetBasedOnLocation(botLocation, userLocation, username, text) {
 }
 
 function followUser(userID) {
-  client.post('friendships/create', function(screen_name,id,follow) {
+  client.post('friendships/create', {screen_name: userID}, function(screen_name,id,follow) {
 
-  })
+  });
 }
 
 function stream(tag) {
   client.stream('statuses/filter', { track: tag }, function(stream) {
     stream.on('data', function(tweet) {      
-      followUser()
+      followUser(tweet.user.screen_name);
+      userRetweet(tweet.id_str);
     });
     stream.on('error', function(error) {
       console.log(error);
@@ -59,10 +60,10 @@ function stream(tag) {
   });
 }
 
-stream('#reactjs,vuejs');
+stream('#reactjs,#vuejs,#javascript');
 
 //TODO - add response based on mentioning botname [x]
-//TODO - add follow function [-]
+//TODO - add follow function [x]
 //TODO - add location based response / retweets [-]
 //TODO - add user specific retweets / responses []
 //TODO - add image upload support []
