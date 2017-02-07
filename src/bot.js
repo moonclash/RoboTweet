@@ -60,10 +60,19 @@ function stream(tag) {
   });
 }
 
-stream('#reactjs,#vuejs,#javascript');
+function sendMessageToUser(screenName,textContent) {
+  client.post('direct_messages/new',{screen_name: screenName,text: textContent},function(user,screen_name,id){
+      console.log(user,screen_name,id);
+  });
+}
 
+
+
+sendMessageToUser('emil_mladenov','This was sent by your bot :)');
 //TODO - add response based on mentioning botname [x]
 //TODO - add follow function [x]
+//TODO - add send message to user function [x]
+//TODO - add listen for a follower function [-]
 //TODO - add location based response / retweets [-]
 //TODO - add user specific retweets / responses []
 //TODO - add image upload support []
